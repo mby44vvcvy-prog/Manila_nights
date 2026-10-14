@@ -59,6 +59,9 @@ for(let j=1;j<=8;j++){let k=(dealerId+j)%8;if(players[k].chips>0){dealerId=k;bre
 for(let j=1;j<=8;j++){let k=(dealerId+j)%8;if(players[k].chips>0){blindId=k;break}}
 commit(players[blindId],1);currentBet=players[blindId].bet;
 log(`${players[dealerId].name} is dealer (D). ${players[blindId].name} posts the 1-chip blind (B).`);
+// Reveal the first community card before the first player acts.
+street=1;board.push(deck.pop());
+log(`Community card 1: ${board[0].r}${board[0].s}`);
 currentActor=(blindId+1)%8;render();advanceActor()}
 function active(){return players.filter(p=>!p.folded)}
 function eligible(){return players.filter(p=>!p.folded&&!p.allin)}
