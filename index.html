@@ -45,6 +45,32 @@
 #modal .modal-content{width:min(100%,460px)!important;background:rgba(11,31,37,.16)!important;border:1px solid rgba(220,234,225,.40)!important;border-radius:14px!important;box-shadow:none!important;padding:12px 18px!important;pointer-events:auto!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 #modal h2,#modal p{color:#fff!important;text-shadow:0 2px 4px #061b20,0 0 8px #061b20,0 0 3px #061b20!important}
 #modal .primary{background:#dfc58b!important}
+
+/* Phone-only showdown: allow full view of players and river through the controls. */
+@media (max-width: 600px) {
+  .controls.hand-complete {
+    width: min(74%, 250px);
+    padding: 5px 7px;
+    background: rgba(8, 38, 48, .08);
+    border: 1px solid rgba(170, 211, 199, .19);
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+  .controls.hand-complete .info {
+    font-size: 11px;
+    margin-bottom: 3px;
+    color: rgba(255, 255, 255, .93);
+    text-shadow: 0 1px 3px #071a1c;
+  }
+  .controls.hand-complete .actions .primary {
+    background: rgba(234, 193, 110, .20);
+    border: 1px solid rgba(234, 193, 110, .45);
+    color: #fffbe9;
+    text-shadow: 0 1px 3px #152323;
+    padding: 7px 10px;
+    box-shadow: none;
+  }
+}
 </style></head><body><main class="shell"><header class="top"><div><div class="brand">♠ MANILA <b>NIGHTS</b></div><div class="small">A social poker table · play money only</div></div><div class="pill" id="handBadge">Hand 1 of 10</div><button class="pill" style="background:#253d46;color:#fff;cursor:pointer" id="newMatch">↻ New match</button></header><div class="game"><section class="table-area" aria-label="Manila poker table"><div class="felt-pattern"></div><div class="seats" id="seats"></div><div class="table-center"><div class="pot" id="pot">POT · 0</div><div class="status" id="street">Preparing table</div><div class="board" id="board"></div><div class="status" id="winner"></div></div><div class="controls" id="controls"><div class="info" id="prompt">Welcome to Manila Nights</div><div class="actions" id="actions"><button class="primary" id="startGame">Deal first hand</button></div></div><div class="modal" id="picker"><div class="modal-content"><h2>Choose your player</h2><p>Play as anyone at the table. All other players become AI opponents.</p><select id="playerSelect" style="width:100%;padding:12px;border-radius:9px;font:inherit;margin-bottom:16px"><option>Yuriy</option><option>Tony</option><option>GeorgeK</option><option>GeorgeP</option><option>Mik</option><option>Marc</option><option>Andy</option><option>Spiro</option></select><button class="primary" id="chooseStart">Start match</button></div></div><div class="modal hidden" id="modal"><div class="modal-content"><h2 id="modalTitle"></h2><p id="modalBody"></p><button class="primary" id="modalNext">Next hand</button></div></div></section><aside class="sidebar"><div><div class="panel-title">Table standings</div><div id="scores"></div></div><div><div class="panel-title">Table talk</div><div class="log" id="log" aria-live="polite"></div></div><div class="notice">32-card Manila · 7–A · 2 hole cards required · flush beats full house · 5 community cards · suit tiebreak ♠ > ♣ > ♥ > ♦ · fixed-limit betting · D = dealer · B = 1-chip blind</div></aside></div><p class="footer">Prototype v0.5 · One human + seven personality-driven AI players · No accounts, payments or real-money wagering</p></main><script>
 'use strict';
 const suits=['♠','♥','♦','♣'],ranks=['7','8','9','10','J','Q','K','A'];
