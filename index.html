@@ -160,32 +160,15 @@ function compare(a,b){for(let i=0;i<Math.max(a.length,b.length);i++){let diff=(a
 // then the 10 suits if necessary. Board-card suits never break a tie.
 const suitPower={'♠':4,'♦':3,'♣':2,'♥':1};
 function compareSuitTiebreak(a,b){
- // For equal-ranked straights, compare the suits of the actual five
- // straight cards, highest straight position first. A is LOW in A-7-8-9-10.
- // Both hole cards must still be part of each candidate five-card hand.
- const straightKey=p=>{
-  let best=null;
-  for(const community of combos(board,3)){
-   const cards=[...p.hole,...community],score=scoreFive(cards);
-   if(score[0]!==4&&score[0]!==8)continue;
-   const high=score[1], lowAce=high===10&&[14,10,9,8,7].every(v=>cards.some(c=>ranks.indexOf(c.r)+7===v));
-   const order=lowAce?[10,9,8,7,14]:[high,high-1,high-2,high-3,high-4];
-   const key=order.map(value=>{
-    const card=cards.find(c=>ranks.indexOf(c.r)+7===value);
-    return card?suitPower[card.s]:0;
-   });
-   if(!best||compare(key,best)>0)best=key;
-  }
-  return best;
- };
+ // Compare each player's mandatory TWO hole cards, not board-card suits.
+ // Primary comparison is hole-card rank, followed by suit for equal ranks.
+ // In an A-7-8-9-10 straight, Ace has the lowest effective rank.
  const sa=bestHand(a),sb=bestHand(b);
- if(sa&&sb&&(sa[0]===4||sa[0]===8)&&sa[0]===sb[0]){
-  const ka=straightKey(a),kb=straightKey(b);
-  if(ka&&kb)return compare(ka,kb);
- }
- // Existing house rule for other equal-ranked hand categories.
- const key=p=>p.hole.map(c=>[ranks.indexOf(c.r)+7,suitPower[c.s]])
-  .sort((x,y)=>y[0]-x[0]||y[1]-x[1]).map(x=>x[1]);
+ const lowAce=sa&&sb&&(sa[0]===4||sa[0]===8)&&sa[0]===sb[0]&&sa[1]===10&&sb[1]===10;
+ const key=p=>p.hole.map(c=>[
+  lowAce&&c.r==='A'?6:ranks.indexOf(c.r)+7,
+  suitPower[c.s]
+ ]).sort((x,y)=>y[0]-x[0]||y[1]-x[1]).flat();
  return compare(key(a),key(b));
 }
 function bestHand(p){if(board.length<3)return null;return combos(board,3).map(c=>scoreFive([...p.hole,...c])).sort((a,b)=>compare(b,a))[0]}
